@@ -1,11 +1,67 @@
+
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#102018" />
-    <meta name="description" content="Запись на футбол по субботам, 20:00–22:00. Взнос 350 ₽." />
-    <title>Субботний футбол</title>
-  </head>
-  <body><div id="app"></div><script type="module" src="/src/main.js"></script></body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#102018">
+  <title>Субботний футбол — Раменское</title>
+</head>
+<body>
+  <div id="app">
+    <header class="hero">
+      <div class="container">
+        <div class="eyebrow">⚽ РАМЕНСКОЕ</div>
+        <h1>Субботний футбол</h1>
+        <p>Собираемся каждую субботу. Записывайся на игру!</p>
+        <div class="hero-meta">
+          <span>📅 <strong id="event-date">Ближайшая суббота</strong></span>
+          <span>🕗 20:00–22:00</span>
+          <span>💳 <strong id="price">350 ₽</strong></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Записаться на футбол</h2>
+        <p class="muted">Без регистрации. Просто введи своё имя.</p>
+        <form id="signup">
+          <label for="name">Твоё имя</label>
+          <input id="name" type="text" maxlength="40" required placeholder="Например, Ислам">
+          <button id="signup-btn" class="btn btn-bright" type="submit">⚽ Я иду!</button>
+        </form>
+        <div id="setup-warning" class="notice warn" hidden>Необходимо подключить Supabase.</div>
+      </section>
+
+      <section class="card">
+        <h2>Участники</h2>
+        <p id="player-count" class="muted">Загрузка...</p>
+        <div id="players"></div>
+      </section>
+
+      <section class="card">
+        <h2>Оплата участия</h2>
+        <p>Взнос: <strong>350 ₽</strong></p>
+        <p>Банк: <strong id="bank-name">ОЗОН Банк</strong></p>
+        <div id="payment-area"></div>
+        <p class="muted">После перевода нажми «Я оплатил» рядом со своим именем. Организатор подтвердит оплату.</p>
+      </section>
+
+      <section class="card">
+        <h2>Наша группа</h2>
+        <a id="whatsapp-link" class="btn btn-dark" href="#">Открыть WhatsApp ↗</a>
+      </section>
+
+      <section class="card">
+        <h2>Организатор</h2>
+        <div id="admin-content"></div>
+        <button id="admin-refresh" class="small-action" type="button">Обновить список</button>
+      </section>
+    </main>
+
+    <div id="notice" class="notice" hidden></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
