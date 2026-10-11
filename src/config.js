@@ -4,7 +4,7 @@ export const SUPABASE_URL = "https://hfthtycwxwtmbncnjpum.supabase.co";
 export const SUPABASE_ANON_KEY = "sb_publishable_fTYpLYaMbG0WLWytkhAZWw_oiPjogF6";
 
 // Ссылка на вашу группу WhatsApp (пример: https://chat.whatsapp.com/...). 
-export const WHATSAPP_URL = "";
+export const WHATSAPP_URL = "https://chat.whatsapp.com/BhNxVl3wC0BB7D3EA0c2TD?mode=gi_t";
 
 // Добавь сюда ссылку на QR-код СБП или на платёжную страницу ОЗОН Банка.
 // Не используй ссылку на обычный перевод, если банк не подтверждает, что это безопасная ссылка СБП.
