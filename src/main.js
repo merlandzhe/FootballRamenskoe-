@@ -7,13 +7,33 @@ const supabase = configured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : nu
 const $ = (sel) => document.querySelector(sel);
 const state = { event: null, players: [], admin: false, session: null, busy: false };
 
+
 function upcomingSaturday() {
-  const d = new Date();
-  const delta = (6 - d.getDay() + 7) % 7 || 7;
-  d.setDate(d.getDate() + delta);
-  d.setHours(0,0,0,0);
-  return d;
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Moscow',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    weekday: 'short',
+    hour: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(new Date());
+
+  const get = type => parts.find(p => p.type === type).value;
+  const year = Number(get('year'));
+  const month = Number(get('month'));
+  const day = Number(get('day'));
+  const weekday = get('weekday');
+  const hour = Number(get('hour'));
+
+  const days = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  let delta = (6 - days[weekday] + 7) % 7;
+
+  if (delta === 0 && hour >= 23) delta = 7;
+
+  return new Date(year, month - 1, day + delta, 12);
 }
+
 function dateKey(date) {
   const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
   return `${y}-${m}-${d}`;
