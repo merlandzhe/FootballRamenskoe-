@@ -98,6 +98,18 @@ function renderAdmin() {
   `);
 
   $('#history-btn').addEventListener('click', loadGameHistory);
+   section.insertAdjacentHTML('beforeend', `
+    <div class="statistics-section">
+      <h3>📊 Статистика за месяц</h3>
+      <div id="football-statistics"></div>
+      <button id="stats-refresh" class="small-action" type="button">
+        ↻ Обновить статистику
+      </button>
+    </div>
+  `);
+
+  $('#stats-refresh').addEventListener('click', loadStatistics);
+  loadStatistics();
   $('#admin-logout').addEventListener('click', async () => { await supabase.auth.signOut(); state.admin=false; state.session=null; renderAdmin(); });
   section.querySelectorAll('[data-approve]').forEach(b => b.addEventListener('click', () => setPaid(b.dataset.approve, true)));
   section.querySelectorAll('[data-unpay]').forEach(b => b.addEventListener('click', () => setPaid(b.dataset.unpay, false)));
@@ -174,6 +186,88 @@ async function loadGameHistory() {
   } catch (e) {
     container.textContent =
       'Не удалось загрузить историю: ' + (e.message || e);
+  }
+}
+async function loadStatistics() {
+  const box = $('#football-statistics');
+  if (!state.admin || !box) return;
+
+  box.innerHTML = '<p class="muted">Загрузка статистики...</p>';
+
+  try {
+    const month = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Europe/Moscow',
+      year: 'numeric',
+      month: '2-digit'
+    }).format(new Date());
+
+    const start = `${month}-01`;
+    const today = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Europe/Moscow',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(new Date());
+
+    const { data: games, error } = await supabase
+      .from('football_events')
+      .select('id,event_date,price_rub')
+      .gte('event_date', start)
+      .lt('event_date', today)
+      .order('event_date');
+
+    if (error) throw error;
+
+    const ids = (games || []).map(g => g.id);
+    let players = [];
+
+    if (ids.length) {
+      const result = await supabase
+        .from('football_participants')
+        .select('event_id,paid_at')
+        .in('event_id', ids);
+
+      if (result.error) throw result.error;
+      players = result.data || [];
+    }
+
+    const priceMap = new Map(
+      (games || []).map(g => [g.id, Number(g.price_rub ?? PRICE_RUB)])
+    );
+
+    const paid = players.filter(p => p.paid_at);
+    const unpaid = players.filter(p => !p.paid_at);
+
+    const collected = paid.reduce(
+      (sum, p) => sum + priceMap.get(p.event_id), 0
+    );
+
+    const debt = unpaid.reduce(
+      (sum, p) => sum + priceMap.get(p.event_id), 0
+    );
+
+    const count = games?.length || 0;
+    const average = count ? Math.round(collected / count) : 0;
+
+    const rub = n => `${n.toLocaleString('ru-RU')} ₽`;
+
+    box.innerHTML = `
+      <div class="stats-main">
+        <span>Собрано за текущий месяц</span>
+        <strong>${rub(collected)}</strong>
+        <small>${paid.length} подтверждённых оплат</small>
+      </div>
+
+      <div class="stats-grid">
+        <div><span>⚽ Игр</span><strong>${count}</strong></div>
+        <div><span>👥 Записей</span><strong>${players.length}</strong></div>
+        <div><span>💳 Не оплачено</span><strong>${rub(debt)}</strong></div>
+        <div><span>📈 Средний сбор</span><strong>${rub(average)}</strong></div>
+      </div>
+    `;
+
+  } catch (e) {
+    box.textContent = 'Ошибка статистики: ' + (e.message || e);
   }
 }
 async function ensureEvent() {
