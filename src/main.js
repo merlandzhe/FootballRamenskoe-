@@ -88,6 +88,16 @@ function renderAdmin() {
   section.innerHTML = `<div class="admin-top"><span class="admin-tag">Вы вошли как организатор</span><button id="admin-logout" class="link-btn">Выйти</button></div>
     <div class="admin-stats"><div><span>Участников</span><strong>${state.players.length}</strong></div><div><span>На проверке</span><strong>${pending.length}</strong></div><div><span>Оплачено</span><strong>${state.players.filter(p=>p.paid).length}</strong></div></div>
     <div class="admin-list">${state.players.length ? state.players.map(p => `<div class="admin-row"><div><strong>${escapeHtml(p.name)}</strong><span class="muted tiny">${statusFor(p)[0]}</span></div><div class="admin-actions">${!p.paid ? `<button class="small-action" data-approve="${p.id}">Подтвердить</button>` : ''}${p.paid ? `<button class="small-action neutral" data-unpay="${p.id}">Снять оплату</button>` : ''}<button class="small-action danger" data-delete="${p.id}">Удалить</button></div></div>`).join('') : '<p class="muted">Записей пока нет.</p>'}</div>`;
+    section.insertAdjacentHTML('beforeend', `
+    <div class="history-section">
+      <button id="history-btn" class="btn btn-dark" type="button">
+        📅 История предыдущих игр
+      </button>
+      <div id="history-content"></div>
+    </div>
+  `);
+
+  $('#history-btn').addEventListener('click', loadGameHistory);
   $('#admin-logout').addEventListener('click', async () => { await supabase.auth.signOut(); state.admin=false; state.session=null; renderAdmin(); });
   section.querySelectorAll('[data-approve]').forEach(b => b.addEventListener('click', () => setPaid(b.dataset.approve, true)));
   section.querySelectorAll('[data-unpay]').forEach(b => b.addEventListener('click', () => setPaid(b.dataset.unpay, false)));
