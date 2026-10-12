@@ -103,6 +103,79 @@ function renderAdmin() {
   section.querySelectorAll('[data-unpay]').forEach(b => b.addEventListener('click', () => setPaid(b.dataset.unpay, false)));
   section.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => deletePlayer(b.dataset.delete)));
 }
+async function loadGameHistory() {
+  const container = $('#history-content');
+  if (!state.admin || !container) return;
+
+  container.innerHTML = '<p class="muted">Загружаем историю...</p>';
+
+  try {
+    const { data: games, error } = await supabase
+      .from('football_events')
+      .select('id,event_date,price_rub')
+      .lt('event_date', state.event.event_date)
+      .order('event_date', { ascending: false })
+      .limit(30);
+
+    if (error) throw error;
+
+    if (!games?.length) {
+      container.innerHTML =
+        '<p class="muted">Предыдущих игр пока нет.</p>';
+      return;
+    }
+
+    const ids = games.map(g => g.id);
+
+    const { data: players, error: playersError } = await supabase
+      .from('football_participants')
+      .select('id,event_id,name,paid_at')
+      .in('event_id', ids);
+
+    if (playersError) throw playersError;
+
+    container.innerHTML = games.map(game => {
+      const participants = (players || [])
+        .filter(p => p.event_id === game.id);
+
+      const paid = participants.filter(p => !!p.paid_at);
+      const price = Number(game.price_rub ?? PRICE_RUB);
+
+      return `
+        <details class="history-game">
+          <summary>
+            <strong>⚽ ${escapeHtml(prettyDate(game.event_date))}</strong>
+            <span>${participants.length} игроков</span>
+          </summary>
+
+          <div class="history-total">
+            Собрано: <strong>${(paid.length * price).toLocaleString('ru-RU')} ₽</strong>
+          </div>
+
+          <p class="muted tiny">
+            Оплачено: ${paid.length} из ${participants.length}
+          </p>
+
+          ${participants.length
+            ? participants.map(p => `
+              <div class="history-player">
+                <span>${escapeHtml(p.name)}</span>
+                <span class="${p.paid_at ? 'history-paid' : 'history-unpaid'}">
+                  ${p.paid_at ? '✓ Оплачено' : 'Не оплачено'}
+                </span>
+              </div>
+            `).join('')
+            : '<p class="muted">Участников нет.</p>'
+          }
+        </details>
+      `;
+    }).join('');
+
+  } catch (e) {
+    container.textContent =
+      'Не удалось загрузить историю: ' + (e.message || e);
+  }
+}
 async function ensureEvent() {
   const key = dateKey(upcomingSaturday());
   let { data, error } = await supabase.from('football_events').select('*').eq('event_date', key).maybeSingle();
