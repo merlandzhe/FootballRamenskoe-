@@ -163,7 +163,13 @@ async function loadGameHistory() {
           <div class="history-total">
             Собрано: <strong>${(paid.length * price).toLocaleString('ru-RU')} ₽</strong>
           </div>
-
+<button
+  class="history-whatsapp-btn"
+  type="button"
+  data-game="${game.id}"
+>
+  📲 Отправить отчёт в WhatsApp
+</button>
           <p class="muted tiny">
             Оплачено: ${paid.length} из ${participants.length}
           </p>
@@ -182,7 +188,46 @@ async function loadGameHistory() {
         </details>
       `;
     }).join('');
+    container.querySelectorAll('.history-whatsapp-btn')
+      .forEach(button => {
+        button.addEventListener('click', () => {
+          const game = games.find(
+            g => String(g.id) === button.dataset.game
+          );
 
+          if (!game) return;
+
+          const participants = (players || [])
+            .filter(p => p.event_id === game.id);
+
+          const price = Number(game.price_rub ?? PRICE_RUB);
+          const paid = participants.filter(p => p.paid_at);
+          const unpaid = participants.filter(p => !p.paid_at);
+
+          const list = participants.map((p, i) =>
+            `${i + 1}. ${p.name} ${p.paid_at ? '✅' : '❌'}`
+          ).join('\n');
+
+          const report = [
+            `⚽ ИТОГИ ФУТБОЛА — ${game.event_date}`,
+            '',
+            `👥 Участников: ${participants.length}`,
+            `💰 Взнос: ${price} ₽`,
+            `✅ Оплатили: ${paid.length}`,
+            `❌ Не оплатили: ${unpaid.length}`,
+            `💵 Собрано: ${paid.length * price} ₽`,
+            `💳 Не оплачено: ${unpaid.length * price} ₽`,
+            '',
+            '📋 Список игроков:',
+            list
+          ].join('\n');
+
+          window.open(
+            `https://wa.me/?text=${encodeURIComponent(report)}`,
+            '_blank'
+          );
+        });
+      });
   } catch (e) {
     container.textContent =
       'Не удалось загрузить историю: ' + (e.message || e);
