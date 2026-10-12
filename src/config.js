@@ -12,3 +12,5 @@ export const PAYMENT_URL = "";
 export const PAYMENT_QR_IMAGE_URL = ""; // Публичная ссылка на изображение QR-кода, если есть.
 export const PAYMENT_BANK_LABEL = "ОЗОН Банк";
 export const PRICE_RUB = 350;
+export const PAYMENT_PHONE = '+79858166733';
+export const PAYMENT_RECIPIENT = 'Расул';
