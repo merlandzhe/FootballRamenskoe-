@@ -242,3 +242,54 @@
     font-size: 15px;
   }
 }
+.history-section {
+  margin-top: 24px;
+}
+
+#history-btn {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.history-game {
+  background: #173326;
+  border: 1px solid #355c46;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.history-game summary {
+  cursor: pointer;
+  color: #f1f8f2;
+}
+
+.history-game summary span {
+  display: block;
+  color: #a4b7a9;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.history-total {
+  margin-top: 18px;
+  color: #c6d7c9;
+}
+
+.history-total strong,
+.history-paid {
+  color: #b7f56f;
+}
+
+.history-player {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid #355c46;
+  font-size: 14px;
+}
+
+.history-unpaid {
+  color: #e5ae6b;
+}
