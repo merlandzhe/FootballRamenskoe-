@@ -146,3 +146,99 @@
 .payment-details a {
   text-decoration-color: transparent !important;
 }
+/* Компактная оплата */
+.payment-new {
+  background: #183628 !important;
+  border: 1px solid #365a43 !important;
+  border-radius: 20px !important;
+  padding: 20px !important;
+  margin-top: 16px;
+}
+
+.payment-sum {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #365a43;
+}
+
+.payment-sum span,
+.payment-number > span {
+  color: #a9bfb0;
+  font-size: 13px;
+}
+
+.payment-sum strong {
+  color: #b7f675;
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+.payment-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #365a43;
+  font-size: 15px;
+}
+
+.payment-line span {
+  color: #a9bfb0;
+}
+
+.payment-line strong {
+  color: white;
+  text-align: right;
+}
+
+.payment-number {
+  padding-top: 18px;
+}
+
+.payment-number-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.payment-number-row strong {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: clamp(15px, 4vw, 19px);
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0;
+}
+
+.payment-copy-icon {
+  flex-shrink: 0;
+  background: #284c38;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.payment-new .payment-copy {
+  width: 100%;
+  margin-top: 18px;
+  border-radius: 14px;
+  font-weight: 750;
+  min-height: 52px;
+}
+
+@media (max-width: 380px) {
+  .payment-new {
+    padding: 14px !important;
+  }
+  .payment-number-row strong {
+    font-size: 15px;
+  }
+}
