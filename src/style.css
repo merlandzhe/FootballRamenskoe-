@@ -126,3 +126,23 @@
   min-height: 54px;
   font-weight: 750;
 }
+/* Номер телефона в блоке оплаты */
+.payment-details .payment-phone,
+.payment-details .payment-phone strong,
+.payment-details .payment-phone a,
+.payment-details a[href^="tel:"],
+.payment-details a[x-apple-data-detectors] {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif !important;
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+/* Отключаем синюю подсветку номера на iPhone */
+.payment-details a {
+  text-decoration-color: transparent !important;
+}
