@@ -40,18 +40,40 @@
       <section class="card">
         <div class="card-head"><h2>Оплата участия</h2><span class="counter">350 ₽</span></div>
         <p class="muted">Перевод через СБП · <strong id="bank-name">ОЗОН Банк</strong></p>
-        <div class="payment-details" style="margin-top:16px;padding:20px;border:1px solid #315c43;border-radius:18px;background:#142b20;">
-        <div id="payment-area" style="display: none;"></div>
-  <div style="color:#b5f77a;font-size:24px;font-weight:800;">350 ₽</div>
-  <p>Перевод через СБП</p>
-  <p>🏦 Банк: <strong>Ozon Банк</strong></p>
-  <p>👤 Получатель: <strong>Расул</strong></p>
-  <p class="payment-phone">
-  📱 Телефон:
-  <strong>+7 985 816-67-33</strong>
-</p>
+        <div class="payment-details payment-new">
+  <div id="payment-area" style="display:none"></div>
 
-  <button type="button" class="btn"
+  <div class="payment-sum">
+    <span>Взнос за игру</span>
+    <strong>350 ₽</strong>
+  </div>
+
+  <div class="payment-line">
+    <span>Банк</span>
+    <strong>Ozon Банк</strong>
+  </div>
+
+  <div class="payment-line">
+    <span>Получатель</span>
+    <strong>Расул</strong>
+  </div>
+
+  <div class="payment-number">
+    <span>Номер телефона для СБП</span>
+    <div class="payment-number-row">
+      <strong>+7 985 816-67-33</strong>
+      <button type="button" class="payment-copy-icon"
+        onclick="navigator.clipboard.writeText('+79858166733')">
+        ⧉
+      </button>
+    </div>
+  </div>
+
+  <button type="button" class="btn payment-copy"
+    onclick="navigator.clipboard.writeText('+79858166733').then(() => alert('Номер скопирован'))">
+    📋 Скопировать номер
+  </button>
+</div>
     onclick="navigator.clipboard.writeText('+79858166733').then(() => alert('Номер скопирован!')).catch(() => alert('Скопируйте номер вручную: +7 (985) 816-67-33'))"
     style="width:100%;margin-top:12px;">
     📋 Скопировать номер
